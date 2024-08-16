@@ -1,0 +1,132 @@
+{
+	\tikzset{Activity/.style = {draw, thick, inner sep=.2cm, rounded corners=0.2cm,  minimum width=1cm, align=center, font=\scriptsize}}
+	\tikzset{Decision/.style = {draw, diamond, thick, inner sep=.2cm, minimum width=1cm, minimum height=0.618cm, align=center, font=\scriptsize}}
+	\tikzset{Fork/.style = {draw, thick, fill=gray, minimum width=1cm, inner sep=0cm}}
+	\tikzset{Start/.style = {circle,fill=black,minimum size=0.5cm}}
+	\tikzset{End/.style = {draw, thick, double, circle, fill=black, inner sep=0, align=center, minimum size=0.5cm}}
+	\tikzset{Flow/.style = {->,>=stealth',shorten >=1pt,semithick, align=center,font=\sffamily\footnotesize}}  
+	\tikzset{Noteconnect/.style = {-,dashed, shorten >=1pt,semithick}}  
+	
+	\tikzset{Boolean/.style = {minimum width=1cm, align=center, above, font=\scriptsize}}
+
+\begin{tikzpicture}
+
+\node[Start] at (0,0) (start) {};
+\node[Activity, anchor=north] at ($(start) + (0,-0.5)$) (rezhimStorage) {считывание значения режима из хранилища};
+
+\node[Decision, anchor=north, label={[shift={(-0.4, -0.2)}, rotate=40, align=center, font=\scriptsize]:Значение}] at ($(rezhimStorage.south) + (0,-0.5)$) (IfrezhimStorage) {};
+
+\node[Activity, anchor=east] at ($(IfrezhimStorage.west) + (-1,0)$) (rezhimOpyt) {режим:='опыт'};
+\node[Activity, anchor=west] at ($(IfrezhimStorage.east) + (1,0)$) (rezhimOzhidanie) {режим:='ожидание'};
+
+\node[Decision, anchor=north] at ($(IfrezhimStorage.south) + (0,-0.1)$) (EndIfrezhimStorage) {};
+
+\node[Fork, minimum width=10cm] at ($(EndIfrezhimStorage) + (0, -0.8)$) (potoki1) {};
+
+\node[Activity, align=left, anchor=north] at  ($(potoki1) + (-4,-0.5)$)  (wifiPrisvoenie) {connected:=false\\error:=''\\IP:=''};% potok соединение с WIFI
+
+\node[Activity, anchor=north] at ($(potoki1) + (0,-0.5)$) (sensor) {соединение с датчиком термометра};
+\node[Activity, anchor=north] at ($(potoki1) + (4,-0.5)$) (screen) {соединение с экраном};
+
+\draw[Flow] (start) -- (rezhimStorage);
+\draw[Flow] (rezhimStorage) -- (IfrezhimStorage);
+\draw[Flow] (IfrezhimStorage.west) -- node[Boolean, below]{'опыт'} ++(-0.9, 0) -- (rezhimOpyt);
+\draw[Flow] (IfrezhimStorage.east) -- node[Boolean, below]{\emph{иначе}} ++(0.9, 0) -- (rezhimOzhidanie);
+\draw[Flow] (rezhimOpyt) |- (EndIfrezhimStorage);
+\draw[Flow] (rezhimOzhidanie) |- (EndIfrezhimStorage);
+\draw[Flow] (EndIfrezhimStorage) -- (potoki1);
+\draw[Flow] (potoki1 -| wifiPrisvoenie.north) -- (wifiPrisvoenie.north);
+\draw[Flow] (potoki1) -- (sensor);
+\draw[Flow] (potoki1 -| screen.north) -- (screen.north);
+
+
+\node[Activity, align=left, anchor=north] at ($(wifiPrisvoenie.south) + (0,-0.5)$) (wifiConnect) {Подключение к WIFI};
+\node[Decision, anchor=north, label={[shift={(-0.4, -0.2)}, rotate=40, align=center, font=\scriptsize]:Ошибка}] at ($(wifiConnect.south) + (0,-0.5)$) (wifiIfError) {};
+\node[Activity, align=left, anchor=north] at ($(wifiIfError.east) + (1.5,-0.5)$) (wifiError) {error:=<ошибка>};
+\node[Activity, align=left, anchor=north] at ($(wifiIfError.south) + (0,-1)$) (wifiHostName) {Присвоение названия\\прибора в сети};
+\node[Activity, align=left, anchor=north] at ($(wifiHostName.south) + (0,-0.5)$) (wifiSave) {Сохранение сети};
+\node[Activity, align=left, anchor=north] at ($(wifiSave.south) + (0,-0.5)$) (wifiConnectedTrue) {connected:=true};
+\node[Decision, anchor=north] at ($(wifiConnectedTrue.south) + (0,-0.5)$) (wifiEndIfError) {};
+\node[Activity, align=left, anchor=north] at ($(wifiEndIfError.south) + (0,-0.5)$) (wifiOzhidanie) {Ожидание события};
+\node[Decision, anchor=north, label={[shift={(-0.4, -0.2)}, rotate=40, align=center, font=\scriptsize]:Событие}] at ($(wifiOzhidanie.south) + (0,-0.5)$) (wifiIfSobitie) {};
+\node[Activity, align=left, anchor=north] at ($(wifiIfSobitie.west) + (-1.5,-0.5)$) (wifiConnected) {connected := true\\error :=''\\IP := <ip>};
+\node[Activity, align=left, anchor=north] at ($(wifiIfSobitie.east) + (2,-0.5)$) (wifiDisconnected) {connected := false\\error:=<ошибка>\\IP := ''};
+\node[Decision, anchor=north] at ($(wifiIfSobitie |- wifiDisconnected.south) + (0,-0.1)$) (wifiEndIfSobitie) {};
+
+
+
+\draw[Flow] (wifiPrisvoenie) -- (wifiConnect);
+\draw[Flow] (wifiConnect) -- (wifiIfError);
+\draw[Flow] (wifiIfError.east) -- node[Boolean]{да} ++(0.5, 0) -| (wifiError);
+\draw[Flow] (wifiIfError.south) -- node[Boolean, left]{нет} ++(0, -0.5) -- (wifiHostName);
+\draw[Flow] (wifiHostName) -- (wifiSave);
+\draw[Flow] (wifiSave) -- (wifiConnectedTrue);
+\draw[Flow] (wifiConnectedTrue) -- (wifiEndIfError);
+\draw[Flow] (wifiError) |- (wifiEndIfError);
+\draw[Flow] (wifiEndIfError) -- (wifiOzhidanie);
+\draw[Flow] (wifiOzhidanie) -- (wifiIfSobitie);
+\draw[Flow] (wifiIfSobitie.west) -- node[Boolean, below]{'connected'} ++(-0.9, 0) -| (wifiConnected);
+\draw[Flow] (wifiIfSobitie.east) -- node[Boolean, below]{'disconnected'} ++(1.2, 0) -| (wifiDisconnected);
+\draw[Flow] (wifiConnected) |- (wifiEndIfSobitie);
+\draw[Flow] (wifiDisconnected) |- (wifiEndIfSobitie);
+\draw[Flow] (wifiEndIfSobitie.south) -- ++(0, -0.2) -- ++(4.5, 0) |- (wifiOzhidanie);
+
+
+\node[Fork, minimum width=4cm] at ($(screen) + (0, -0.8)$) (potoki2) {};
+\node[Activity, anchor=north] at  ($(potoki2) + (2,-0.5)$) (knopka) {Установка режима\\ножки GPIO12\\input pullup}; % Отслежка нажатия кнопки
+\node[Fork, minimum width=4cm] at ($(potoki2) + (-3,-0.5)$) (endPotok1) {};
+\node[Activity, anchor=north] at ($(endPotok1) + (0,-0.5)$) (temperatura) {Считывание температуры};
+
+
+\draw[Flow] (screen) -- (potoki2);
+\draw[Flow] (potoki2 -| knopka) -- (knopka);
+\draw[Flow] (sensor) --  (sensor |- endPotok1);
+\draw[Flow] (potoki2.south west) --  (potoki2.south west |- endPotok1);
+\draw[Flow] (endPotok1) -- (temperatura);
+
+
+
+\node[Activity, anchor=north, align=left] at ($(temperatura.south) + (0,-0.5)$) (temperaturaScreen) {Отображение:\\connected,\\error,\\IP,\\температура\\на экран};
+\node[Decision, anchor=north, label={[shift={(-0.4, -0.2)}, rotate=40, align=center, font=\scriptsize]:режим}] at ($(temperaturaScreen.south) + (0,-0.5)$) (temperaturaIfOpyt) {};
+\node[Activity, anchor=north] at ($(temperaturaIfOpyt.south) + (0,-0.5)$) (temperaturaSend) {Запрос на сервис:\\Текущая температура};
+\node[Decision, anchor=north] at ($(temperaturaSend.south) + (0,-0.3)$) (temperaturaEnd) {};
+
+
+\draw[Flow] (temperatura) -- (temperaturaScreen);
+\draw[Flow] (temperaturaScreen) -- (temperaturaIfOpyt);
+\draw[Flow] (temperaturaIfOpyt) -- node[Boolean, right]{'опыт'} ++(0, -0.5) -- (temperaturaSend);
+\draw[Flow] (temperaturaSend) -- (temperaturaEnd);
+\draw[Flow] (temperaturaIfOpyt.west) -- ++(-1.5, 0) |- (temperaturaEnd.west);
+\draw[Flow] (temperaturaEnd.south) -- ++(0, -0.2) -- node[Boolean, below]{через секунду} ++(2, 0) |- (temperatura);
+
+
+
+%\node[Activity, anchor=north] at ($(knopka.south) + (0,-0.5)$) (knopkaLtBp) {пред:=0};
+\node[Activity, anchor=north] at ($(knopka.south) + (0,-0.5)$) (knopkaOtslezka) {Отслежка положительного\\сигнала};
+%\node[Decision, anchor=north, label={[shift={(1, -0.2)}, align=left, font=\scriptsize]:сейчас-пред>1}] at ($(knopkaOtslezka.south) + (0,-0.5)$) (knopkaNagatie) {};
+%\node[Activity, anchor=north] at ($(knopkaNagatie.south) + (0,-0.5)$) (knopkaLtBpNow) {пред:=сейчас};
+\node[Decision, anchor=north, label={[shift={(-0.4, -0.2)}, rotate=40, align=center, font=\scriptsize]:режим}] at ($(knopkaOtslezka.south) + (0,-0.5)$) (knopkaIfOpyt) {};
+\node[Activity, anchor=east, rotate=90] at ($(knopkaIfOpyt.west) + (-0.8,-0.5)$) (knopkaOzhidanie) {режим:='ожидание' \\ запись в хранилище};
+\node[Activity, anchor=north] at ($(knopkaIfOpyt.east) + (0.5,-1)$) (knopkaZapros) {Запрос на сервис:\\Новый опыт};
+\node[Activity, anchor=north] at ($(knopkaZapros.south) + (0,-0.5)$) (knopkaOpyt) {режим:='опыт' \\ запись в хранилище};
+\node[Decision, anchor=north] at ($(knopkaIfOpyt |- knopkaOpyt.south) + (0,-0.1)$) (knopkaEndIfOpyt) {};
+%\node[Decision, anchor=north] at ($(knopkaEndIfOpyt.south) + (0,-0.3)$) (knopkaEndNagatie) {};
+
+
+\draw[Flow] (knopka) -- (knopkaOtslezka);
+\draw[Flow] (knopkaOtslezka) -- (knopkaIfOpyt);
+%\draw[Flow] (knopkaOtslezka) -- (knopkaNagatie);
+%\draw[Flow] (knopkaNagatie) -- (knopkaLtBpNow);
+%\draw[Flow] (knopkaLtBpNow) -- (knopkaIfOpyt);
+\draw[Flow] (knopkaIfOpyt) -- node[Boolean, below]{'опыт'} ++(-0.9, 0) -| (knopkaOzhidanie);
+\draw[Flow] (knopkaIfOpyt) -| (knopkaZapros);
+\draw[Flow] (knopkaZapros) -- (knopkaOpyt);
+\draw[Flow] (knopkaOpyt) |- (knopkaEndIfOpyt);
+\draw[Flow] (knopkaOzhidanie) |- (knopkaEndIfOpyt);
+%\draw[Flow] (knopkaNagatie.west) -- ++(-1.5, 0) |- (knopkaEndNagatie.west);
+
+\draw[Flow] (knopkaEndIfOpyt.south) |- ++(-2.5, -0.3)  |- (knopkaOtslezka.west);
+
+
+\end{tikzpicture}
+}

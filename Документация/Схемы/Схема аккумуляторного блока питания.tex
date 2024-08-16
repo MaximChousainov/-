@@ -1,0 +1,133 @@
+{
+\tikzstyle{branch}=[fill,shape=circle,minimum size=2pt,inner sep=0pt]
+	
+
+
+\pgfdeclareshape{stabilizator}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.2\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{-10mm}{-4mm}} 
+	\anchor{vccIn}{\pina}
+	\savedanchor\pinb{\pgfpoint{10mm}{-4mm}}
+	\anchor{vOut}{\pinb}
+	\savedanchor\pinc{\pgfpoint{-10mm}{4mm}}
+	\anchor{gnd}{\pinc}
+    \savedanchor\pind{\pgfpoint{10mm}{4mm}}
+	\anchor{gndOut}{\pind}
+	\foregroundpath{ % border and pin numbers are drawn here
+		\pgfsetlinewidth{0.5mm}
+		\pgfpathrectanglecorners{\pgfpoint{-9mm}{7mm}}{\pgfpoint{9mm}{-7mm}}
+		
+		\pgfusepath{draw} %draw rectangle
+        \pgftext[at={\pgfpoint{0mm}{0mm}}]{\scriptsize TPS63020}
+		\pgftext[left,at={\pgfpoint{-8mm}{-4mm}}]{\tiny VIN}
+		\pgftext[right,at={\pgfpoint{8mm}{-4mm}}]{\tiny $+3{,}3$ В}
+		\pgftext[left,at={\pgfpoint{-8mm}{4mm}}]{\tiny GND}
+        \pgftext[right,at={\pgfpoint{8mm}{4mm}}]{\tiny GND}
+	}
+	\behindbackgroundpath{ %
+		\path[draw, red, line width=0.5mm]   (-9mm, -4mm) -- (-10mm, -4mm);
+		\path[draw, red, line width=0.5mm](9mm,    -4mm) -- (10mm,    -4mm);
+		\path[draw, black, line width=0.5mm] (-9mm,  4mm) -- (-10mm,  4mm);
+        \path[draw, black, line width=0.5mm] (9mm,  4mm) -- (10mm,  4mm);
+	}
+}
+
+
+\pgfdeclareshape{zariadka}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.2\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{-10mm}{-4mm}} 
+	\anchor{vccIn}{\pina}
+	\savedanchor\pinb{\pgfpoint{10mm}{-4mm}}
+	\anchor{Bplus}{\pinb}
+	\savedanchor\pinc{\pgfpoint{-10mm}{4mm}}
+	\anchor{gnd}{\pinc}
+    \savedanchor\pind{\pgfpoint{10mm}{4mm}}
+	\anchor{Bminus}{\pind}
+	\foregroundpath{ % border and pin numbers are drawn here
+		\pgfsetlinewidth{0.5mm}
+		\pgfpathrectanglecorners{\pgfpoint{-9mm}{7mm}}{\pgfpoint{9mm}{-7mm}}
+		
+		\pgfusepath{draw} %draw rectangle
+        \pgftext[at={\pgfpoint{0mm}{0mm}}]{\scriptsize TP4056}
+		\pgftext[left,at={\pgfpoint{-8mm}{-4mm}}]{\tiny $+5$ В}
+		\pgftext[right,at={\pgfpoint{8mm}{-4mm}}]{\tiny Б $+$}
+		\pgftext[left,at={\pgfpoint{-8mm}{4mm}}]{\tiny $-$}
+        \pgftext[right,at={\pgfpoint{8mm}{4mm}}]{\tiny Б $-$}
+	}
+	\behindbackgroundpath{ %
+		\path[draw, red, line width=0.5mm]   (-9mm, -4mm) -- (-10mm, -4mm);
+		\path[draw, red, line width=0.5mm](9mm,    -4mm) -- (10mm,    -4mm);
+		\path[draw, black, line width=0.5mm] (-9mm,  4mm) -- (-10mm,  4mm);
+        \path[draw, black, line width=0.5mm] (9mm,  4mm) -- (10mm,  4mm);
+	}
+}
+
+
+\pgfdeclareshape{batareika}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.2\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{-4mm}{16mm}} 
+	\anchor{plus}{\pina}
+	\savedanchor\pinb{\pgfpoint{4mm}{16mm}}
+	\anchor{gnd}{\pinb}
+	\foregroundpath{ % border and pin numbers are drawn here
+		\pgfsetlinewidth{0.5mm}
+		\pgfpathrectanglecorners{\pgfpoint{-10mm}{15mm}}{\pgfpoint{10mm}{-15mm}}
+		
+		\pgfusepath{draw} %draw rectangle
+
+        \pgftext[bottom,at={\pgfpoint{0mm}{5mm}}]{\tiny Литий-полимер}
+        \pgftext[bottom,at={\pgfpoint{0mm}{3mm}}]{\tiny Номинал: $3{,}7$ В}
+        \pgftext[bottom,at={\pgfpoint{0mm}{1mm}}]{\tiny Макс.: $4{,}2$ В}
+		\pgftext[bottom,at={\pgfpoint{-4mm}{11mm}}]{$+$}
+		\pgftext[bottom,at={\pgfpoint{4mm}{11mm}}]{$-$}
+	}
+	\behindbackgroundpath{ %
+		\path[draw, red, line width=0.5mm]   (-4mm, 15mm) -- (-4mm, 16mm);
+		\path[draw, black, line width=0.5mm] (4mm,  15mm) -- (4mm,  16mm);
+	}
+}
+
+
+
+\begin{tikzpicture}[circuit ee IEC]
+
+    \node[batareika, label={[shift={(0, 2cm)} , font=\scriptsize]Аккумулятор}] at (0, 0) (Akkumulator){};
+	
+	\node[stabilizator,  label={[shift={(0, 0.8cm)}, text  width=2.4cm, align=center, font=\scriptsize]Стабилизатор напряжения}] at ($(Akkumulator) + (3, 0.5)$) (Stabilizator){};
+
+    \node[zariadka,  label={[shift={(0, 0.8cm)}, text  width=2.4cm, align=center, font=\scriptsize]Модуль зарядки}] at ($(Akkumulator) + (-3, 0.5)$) (Zariadka){};
+
+    \draw[red] (Zariadka.Bplus) -- ++ (5mm, 0) |-  ($(Akkumulator.plus) + (0, 2mm)$) node[branch, red] (uselBplus) {} -- (Akkumulator.plus) {};
+    
+    \draw[black] (Zariadka.Bminus) -- ++ (2mm, 0) |- ($(Akkumulator.gnd) + (0, 4mm)$) node[branch, black](uselBminus) {} --  (Akkumulator.gnd) {};
+
+    \draw[red] (Stabilizator.vccIn) -- ++ (-5mm, 0) |-  (uselBplus) {};
+
+    \draw[black] (Stabilizator.gnd) -- ++ (-2mm, 0) |-  (uselBminus) {};
+
+    \draw[red, -o] (Zariadka.vccIn) -- ++ (-7mm, 0) coordinate (USBplus) {};    
+    \draw[black, -o] (Zariadka.gnd) -- ++ (-7mm, 0) coordinate (USBminus) {};
+
+    \node[] at ($(USBplus)!0.5!(USBminus)$) (USB){USB};
+
+
+    \draw[red, -o] (Stabilizator.vOut) -- ++ (7mm, 0) coordinate (Outplus) {};    
+    \draw[black, -o] (Stabilizator.gndOut) -- ++ (7mm, 0) coordinate (Outminus) {};
+
+    \node[align=center, font=\scriptsize] at ($(Outplus)!0.5!(Outminus)$) (Out){Питание\\ прибора};
+
+    \node  at ($(Outplus)+(0.2, -0.2)$) (tmp) {\tiny 1};
+    \node  at ($(Outminus)+(0.2, 0.2)$) (tmp) {\tiny 2};
+    
+\end{tikzpicture}
+
+}

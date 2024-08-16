@@ -1,0 +1,267 @@
+{
+\tikzstyle{branch}=[fill,shape=circle,minimum size=2pt,inner sep=0pt]
+	
+	
+\pgfdeclareshape{tempSensor}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.2\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{-3.5mm}{-10.5mm}} 
+	\anchor{vcc}{\pina}
+	\savedanchor\pinb{\pgfpoint{0mm}{-10.5mm}}
+	\anchor{data}{\pinb}
+	\savedanchor\pinc{\pgfpoint{3.5mm}{-10.5mm}}
+	\anchor{gnd}{\pinc}
+	\foregroundpath{ % border and pin numbers are drawn here
+		\pgfsetlinewidth{0.5mm}
+		\pgfpathrectanglecorners{\pgfpoint{-5.5mm}{12mm}}{\pgfpoint{5.5mm}{-12mm}}
+		
+		\pgfusepath{draw} %draw rectangle
+		\pgftext[bottom,at={\pgfpoint{-3.5mm}{-9mm}}]{\tiny \rotatebox{90}{VCC}}
+		\pgftext[bottom,at={\pgfpoint{0mm}{-9mm}}]{\tiny \rotatebox{90}{DATA}}
+		\pgftext[bottom,at={\pgfpoint{3.5mm}{-9mm}}]{\tiny \rotatebox{90}{GND}}
+	}
+	\behindbackgroundpath{ %
+		\path[draw, red, line width=0.5mm]   (-3.5mm, -10mm) -- (-3.5mm, -11mm);
+		\path[draw, yellow, line width=0.5mm](0mm,    -10mm) -- (0mm,    -11mm);
+		\path[draw, black, line width=0.5mm] (3.5mm,  -10mm) -- (3.5mm,  -11mm);
+	}
+}
+
+\pgfdeclareshape{Esp8266}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.5\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{-15.5mm}{-19mm}} 
+	\anchor{vcc}{\pina}
+	\savedanchor\pinb{\pgfpoint{15.5mm}{-19mm}}
+	\anchor{gnd}{\pinb}
+	
+    \savedanchor\pinc{\pgfpoint{15.5mm}{16mm}}
+	\anchor{txd}{\pinc}
+    \savedanchor\pind{\pgfpoint{15.5mm}{11mm}}
+	\anchor{rxd}{\pind}
+	\savedanchor\pine{\pgfpoint{15.5mm}{6mm}}
+	\anchor{gpio05}{\pine}
+	\savedanchor\pinf{\pgfpoint{15.5mm}{1mm}}
+	\anchor{gpio04}{\pinf}
+	\savedanchor\ping{\pgfpoint{15.5mm}{-4mm}}
+	\anchor{gpio00}{\ping}
+	\savedanchor\pinh{\pgfpoint{15.5mm}{-9mm}}
+	\anchor{gpio02}{\pinh}
+	\savedanchor\pini{\pgfpoint{15.5mm}{-14mm}}
+	\anchor{gpio15}{\pini}
+	
+	\savedanchor\pinj{\pgfpoint{-15.5mm}{16mm}}
+	\anchor{rest}{\pinj}
+	\savedanchor\pink{\pgfpoint{-15.5mm}{11mm}}
+	\anchor{adc}{\pink}
+	\savedanchor\pinl{\pgfpoint{-15.5mm}{6mm}}
+	\anchor{ch}{\pinl}
+	\savedanchor\pinm{\pgfpoint{-15.5mm}{1mm}}
+	\anchor{gpio16}{\pinm}
+	\savedanchor\pinn{\pgfpoint{-15.5mm}{-4mm}}
+	\anchor{gpio14}{\pinn}
+	\savedanchor\pino{\pgfpoint{-15.5mm}{-9mm}}
+	\anchor{gpio12}{\pino}
+	\savedanchor\pinp{\pgfpoint{-15.5mm}{-14mm}}
+	\anchor{gpio13}{\pinp}
+	
+	\foregroundpath{ % border and pin numbers are drawn here
+		\pgfsetlinewidth{0.5mm}
+		\pgfpathrectanglecorners{\pgfpoint{-15mm}{20mm}}{\pgfpoint{15mm}{-21mm}}
+		
+		\pgfusepath{draw} %draw rectangle
+		\pgftext[left, at={\pgfpoint{-14mm}{-19mm}}]{\tiny {VCC}}
+		\pgftext[right,at={\pgfpoint{14mm}{-19mm}}]{\tiny {GND}}
+		
+		\pgftext[right, at={\pgfpoint{14mm}{16mm}}]{\tiny {TXD}}
+		\pgftext[right, at={\pgfpoint{14mm}{11mm}}]{\tiny {RXD}}
+		\pgftext[right, at={\pgfpoint{14mm}{6mm}}]{\tiny {GPIO05}}
+		\pgftext[right, at={\pgfpoint{14mm}{1mm}}]{\tiny {GPIO04}}
+		\pgftext[right, at={\pgfpoint{14mm}{-4mm}}]{\tiny {GPIO00}}
+		\pgftext[right, at={\pgfpoint{14mm}{-9mm}}]{\tiny {GPIO02}}
+		\pgftext[right, at={\pgfpoint{14mm}{-14mm}}]{\tiny {GPIO15}}
+		
+		\pgftext[left, at={\pgfpoint{-14mm}{16mm}}]{\tiny {REST}}
+		\pgftext[left, at={\pgfpoint{-14mm}{11mm}}]{\tiny {ADC}}
+		\pgftext[left, at={\pgfpoint{-14mm}{6mm}}]{\tiny {CH\_PD}}
+		\pgftext[left, at={\pgfpoint{-14mm}{1mm}}]{\tiny {GPIO16}}
+		\pgftext[left, at={\pgfpoint{-14mm}{-4mm}}]{\tiny {GPIO14}}
+		\pgftext[left, at={\pgfpoint{-14mm}{-9mm}}]{\tiny {GPIO12}}
+		\pgftext[left, at={\pgfpoint{-14mm}{-14mm}}]{\tiny {GPIO13}}
+	}
+	\behindbackgroundpath{ %
+		\path[draw, red, line width=0.5mm]   (-16mm, -19mm) -- (-15mm, -19mm);
+		\path[draw, black, line width=0.5mm] (16mm,  -19mm) -- (15mm,  -19mm);
+		\foreach \y in {16, 11, 6, 1, -4, -9, -14} {
+		  \foreach \x in {-15, 16} {
+		  \path[draw, black, line width=0.5mm](\x*1mm, \y*1mm) -- (\x*1mm -1mm, \y*1mm);
+	    } 
+		
+	}
+}
+
+\pgfdeclareshape{screen}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.2\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{5.25mm}{10.5mm}} 
+	\anchor{vcc}{\pina}
+	\savedanchor\pinb{\pgfpoint{1.75mm}{10.5mm}}
+	\anchor{gnd}{\pinb}
+	\savedanchor\pinc{\pgfpoint{-1.75mm}{10.5mm}}
+	\anchor{scl}{\pinc}
+	\savedanchor\pind{\pgfpoint{-5.25mm}{10.5mm}}
+	\anchor{sda}{\pind}
+	\foregroundpath{ % border and pin numbers are drawn here
+		\pgfsetlinewidth{0.5mm}
+		\pgfpathrectanglecorners{\pgfpoint{-10mm}{10mm}}{\pgfpoint{10mm}{-10mm}}
+		
+		\pgfusepath{draw} %draw rectangle
+		\pgftext[top,at={\pgfpoint{5.25mm}{9mm}}]{\tiny \rotatebox{90}{VCC}}
+		\pgftext[top,at={\pgfpoint{1.75mm}{9mm}}]{\tiny \rotatebox{90}{GND}}
+		\pgftext[top,at={\pgfpoint{-1.75mm}{9mm}}]{\tiny \rotatebox{90}{SCL}}
+		\pgftext[top,at={\pgfpoint{-5.25mm}{9mm}}]{\tiny \rotatebox{90}{SDA}}
+	}
+	\behindbackgroundpath{ %
+		\path[draw, red, line width=0.5mm]   (5.25mm, 10mm) -- (5.25mm, 11mm);
+		\path[draw, black, line width=0.5mm](1.75mm,    10mm) -- (1.75mm,    11mm);
+		\path[draw, black, line width=0.5mm] (-1.75mm,  10mm) -- (-1.75mm,  11mm);
+		\path[draw, black, line width=0.5mm] (-5.25mm,  10mm) -- (-5.25mm,  11mm);
+	}
+}
+
+
+\pgfdeclareshape{stabilizator}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.2\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{-3.5mm}{-5.5mm}} 
+	\anchor{vccIn}{\pina}
+	\savedanchor\pinb{\pgfpoint{0mm}{-5.5mm}}
+	\anchor{vccOut}{\pinb}
+	\savedanchor\pinc{\pgfpoint{3.5mm}{-5.5mm}}
+	\anchor{gnd}{\pinc}
+	\foregroundpath{ % border and pin numbers are drawn here
+		\pgfsetlinewidth{0.5mm}
+		\pgfpathrectanglecorners{\pgfpoint{-5mm}{5mm}}{\pgfpoint{5mm}{-5mm}}
+		
+		\pgfusepath{draw} %draw rectangle
+		\pgftext[bottom,at={\pgfpoint{-3.5mm}{-4mm}}]{\tiny \rotatebox{90}{VCC IN}}
+		\pgftext[bottom,at={\pgfpoint{0mm}{-4mm}}]{\tiny \rotatebox{90}{+$3{,}3$В}}
+		\pgftext[bottom,at={\pgfpoint{3.5mm}{-4mm}}]{\tiny \rotatebox{90}{GND}}
+	}
+	\behindbackgroundpath{ %
+		\path[draw, red, line width=0.5mm]   (-3.5mm, -5mm) -- (-3.5mm, -6mm);
+		\path[draw, red, line width=0.5mm](0mm,    -5mm) -- (0mm,    -6mm);
+		\path[draw, black, line width=0.5mm] (3.5mm,  -5mm) -- (3.5mm,  -6mm);
+	}
+}
+
+
+\pgfdeclareshape{knopka}{
+	\anchor{center}{\pgfpointorigin} % within the node, (0,0) is the center
+	\anchor{text} % this is used to center the text in the node
+	{  \pgfpoint{-.5\wd\pgfnodeparttextbox}{-.2\ht\pgfnodeparttextbox}  }
+	
+	\savedanchor\pina{\pgfpoint{0mm}{5mm}} 
+	\anchor{in}{\pina}
+	\savedanchor\pinb{\pgfpoint{0mm}{-5mm}}
+	\anchor{out}{\pinb}
+	\foregroundpath{ % border and pin numbers are drawn here
+		
+		\path[draw, -o]   (0, 5mm) -- (0, 3mm);
+		\path[draw, -o]   (0, -5mm) -- (0, -3mm);		
+		
+		\path[draw]   (-2mm, 4.5mm) -- (-2mm, -4.5mm);		
+		\path[draw]   (-3mm, 0) -- (-2mm, 0);
+    }
+	}
+	\behindbackgroundpath{ 
+	}
+}
+
+\begin{tikzpicture}[circuit ee IEC]
+	
+	\node[Esp8266, label={[shift={(0, 2cm)}, font=\scriptsize]Микроконтроллер}] at (0, 0) (ESP8266-12E){\rotatebox{90}{ESP8266-12E}};
+		
+	\node[tempSensor, anchor = data, label={[shift={(0, 1.3cm)}, align=center, font=\scriptsize]Датчик\\ температуры}] at ($(ESP8266-12E.gpio05) + (3, 0.5)$) (DS18B20){\footnotesize \rotatebox{60}{DS18B20}};
+
+	\node[screen] at ($(ESP8266-12E) + (0, -4cm)$) (OLED){\scriptsize Экран};
+	
+	\node[stabilizator,  anchor = vccOut, label={[shift={(0, 0.5cm)}, text  width=2.4cm, align=center, font=\scriptsize]Стабилизатор напряжения}] at ($(ESP8266-12E.vcc) + (-3.5, 0.5)$) (stable){};
+	\node[draw, rectangle, rotate = 90, inner sep=2pt] at ($(ESP8266-12E.gpio16) + (-0.4, -0.2)$)  (R1){\tiny$10$ кОм};
+	\node[draw, rectangle, inner sep=2pt] at ($(ESP8266-12E.gpio02) + (1.5,0)$) (R2){\tiny$10$ кОм};
+	\node[draw, rectangle, inner sep=2pt] at ($(DS18B20.vcc) + (-0.7, -1)$) (R3){\tiny $4{,}7$ кОм};
+	%\node[draw, rectangle, rotate = 90, inner sep=2pt] at ($(ESP8266-12E.gpio13) + (-1,0)$) (R4){\tiny$10$ кОм};
+
+
+    \coordinate (gnd3) at ($(OLED.gnd) + (0, 0.2)$);
+    \coordinate (gnd1) at (stable.gnd |- gnd3);
+    
+    \coordinate (granicaVerh) at ($(ESP8266-12E.vcc) + (-2.5, 0.5)$);
+    \coordinate (granicaNiz) at ($(gnd1-|granicaVerh) + (0, -0.5)$);
+    \draw[dashed, gray] (granicaVerh) -- (granicaNiz) {};
+
+    \coordinate (vhodPlus) at ($(granicaVerh|-ESP8266-12E.vcc)$);
+    \coordinate (vhodMinus) at ($(gnd1-|granicaVerh)$);
+        
+    \draw[red,-o] (ESP8266-12E.vcc) -- (vhodPlus) {};
+    \draw[red] (stable.vccOut) |-  (vhodPlus) {};
+    \draw[black,-o] (gnd3) -- (vhodMinus) {};
+    \draw[black] (stable.gnd |- vhodMinus) --  (vhodMinus) {};
+    \node  at ($(vhodPlus)+(0.2, 0.2)$) (tmp) {\tiny 1};
+    \node  at ($(vhodMinus)+(0.2, 0.2)$) (tmp) {\tiny 2};
+    
+    \node[branch, red] at ($(ESP8266-12E.vcc) + (-0.4, 0)$) (vcc1){};
+    \draw[red] (vcc1) -- ++(0,-0.5) coordinate (inter) -| (DS18B20.vcc) {};
+    \draw[red] (inter -| OLED.vcc) node[branch, red] {} -- (OLED.vcc) {};
+    \draw[red] (R3 -| DS18B20.vcc) node[branch, red] {} -- (R3) {};
+    
+    \coordinate  (tmp) at ($(R3.west) + (-0.2, 0)$);
+    \draw[] (ESP8266-12E.gpio05 -| tmp) node[branch] (tmp) {}|- (R3.west) {};
+    \draw[black] (ESP8266-12E.gpio05) -- (tmp) {};
+    \draw[yellow] (tmp) -| (DS18B20.data) {};
+    
+    \coordinate  (tmp) at ($(OLED.scl) + (0, 0.7)$);
+    \draw[black] (ESP8266-12E.gpio04) --  ++(0.4, 0) |- (tmp) -- (OLED.scl) {};	
+    
+    \coordinate  (tmp) at ($(OLED.sda) + (0, 0.4)$);
+    \draw[black] (ESP8266-12E.gpio00) --  ++(0.6, 0) |- (tmp) -- (OLED.sda) {};	
+    
+    \draw[red, -o] (stable.vccIn) -- ++(0, -2) node[label={below:$+5$В}] () {};
+    
+    \draw[black] (stable.gnd) -- ++(0, -2) node[ground, rotate = -90] {};
+    
+   
+    \coordinate  (gnd2) at ($(ESP8266-12E.gnd) + (0.8, 0)$);
+    \draw[black] (OLED.gnd) -- (gnd3) node[branch] () {} -| (gnd2) node[branch] () {};	
+    \draw[black] (ESP8266-12E.gnd) -|  (DS18B20.gnd) {};
+    
+    %\draw[black] (R4) |- node[branch] (tmp) {} (ESP8266-12E.gpio12) {};
+    %\draw[black] (gnd1 -| R4) node[branch] () {} -- (R4) {};
+    \node[knopka] at ($(ESP8266-12E.gpio16) + (-1,0)$) (knopka) {};
+    \draw[black] (knopka.out) |- (ESP8266-12E.gpio12){};
+    \draw[black] (knopka.in) |- ($(knopka.in) + (-0.6, 0.5)$) coordinate (tmp) -- (tmp |- gnd1) node [branch, black] () {} {};
+    
+    \draw[black]  (ESP8266-12E.ch) -| (R1) {};
+    \draw[red]  (R1) -- (vcc1) {};
+    \draw[red]  (ESP8266-12E.gpio13) -- (vcc1|-ESP8266-12E.gpio13) node [branch, red] () {} {};
+    
+    \draw[black] (ESP8266-12E.gpio02) -- (R2) {};
+    \draw[black] (R2.east) -- ++(0.2, 0) coordinate (tmp) -- (tmp |- ESP8266-12E.gnd)  node [branch] () {} {};
+    
+    \draw[black] (ESP8266-12E.gpio15) -| (gnd2) {};
+
+
+
+
+
+\end{tikzpicture}
+
+}
